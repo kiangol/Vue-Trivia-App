@@ -1,11 +1,11 @@
 <template>
   <main class="container">
+    <button @click="loadCats()">Load Categories</button>
     <form @submit.prevent="onOptionsSubmit" class="m-3">
     <h1>Trivia</h1>
       <fieldset class="mb-3">
         <label for="category" class="h4">Category:</label>
         <select class="form-control" v-model="selectedCategory">
-          <option>Select a category</option>
           <option
             v-for="category of trivia_categories"
             :key="category.id"
@@ -24,7 +24,7 @@
           </option>
         </select>
       </fieldset>
-      
+
 
       <fieldset class="mb-3">
         <label for="amount" class="h4">Number of questions:</label>
@@ -48,6 +48,11 @@
 export default {
   name: "TriviaConfigure",
   methods: {
+    loadCats() {
+      this.$store.dispatch(('fetchCategories'))
+      this.trivia_categories = this.$store.state.categories
+      this.$store.dispatch('fetchQuestions', this.selectedCategory, this.amount, this.selectedDifficulty)
+    },
     onOptionsSubmit() {
       if (!this.selectedCategory) {
         this.error = "You forgot to select a category";
@@ -58,9 +63,14 @@ export default {
         this.error = "You forgot to select a difficulty";
         return;
       }
-      console.log(`${this.selectedCategory} : ${this.selectedDifficulty} : ${this.amount}`);
+      this.$store.dispatch('fetchQuestions', this.selectedCategory, this.amount, this.selectedDifficulty)
       this.$router.push("/start");
     },
+  },
+
+  mounted() {
+    this.trivia_categories = this.$store.state.categories
+    console.log(this.trivia_categories)
   },
 
   data() {
@@ -70,106 +80,108 @@ export default {
       selectedDifficulty: "Easy",
       amount: 10,
       difficulties: ["Easy", "Medium", "Hard"],
-      trivia_categories: [
-        {
-          id: 9,
-          name: "General Knowledge",
-        },
-        {
-          id: 10,
-          name: "Entertainment: Books",
-        },
-        {
-          id: 11,
-          name: "Entertainment: Film",
-        },
-        {
-          id: 12,
-          name: "Entertainment: Music",
-        },
-        {
-          id: 13,
-          name: "Entertainment: Musicals & Theatres",
-        },
-        {
-          id: 14,
-          name: "Entertainment: Television",
-        },
-        {
-          id: 15,
-          name: "Entertainment: Video Games",
-        },
-        {
-          id: 16,
-          name: "Entertainment: Board Games",
-        },
-        {
-          id: 17,
-          name: "Science & Nature",
-        },
-        {
-          id: 18,
-          name: "Science: Computers",
-        },
-        {
-          id: 19,
-          name: "Science: Mathematics",
-        },
-        {
-          id: 20,
-          name: "Mythology",
-        },
-        {
-          id: 21,
-          name: "Sports",
-        },
-        {
-          id: 22,
-          name: "Geography",
-        },
-        {
-          id: 23,
-          name: "History",
-        },
-        {
-          id: 24,
-          name: "Politics",
-        },
-        {
-          id: 25,
-          name: "Art",
-        },
-        {
-          id: 26,
-          name: "Celebrities",
-        },
-        {
-          id: 27,
-          name: "Animals",
-        },
-        {
-          id: 28,
-          name: "Vehicles",
-        },
-        {
-          id: 29,
-          name: "Entertainment: Comics",
-        },
-        {
-          id: 30,
-          name: "Science: Gadgets",
-        },
-        {
-          id: 31,
-          name: "Entertainment: Japanese Anime & Manga",
-        },
-        {
-          id: 32,
-          name: "Entertainment: Cartoon & Animations",
-        },
-      ],
+      trivia_categories: [],
+      // trivia_categories: [
+      //   {
+      //     id: 9,
+      //     name: "General Knowledge",
+      //   },
+      //   {
+      //     id: 10,
+      //     name: "Entertainment: Books",
+      //   },
+      //   {
+      //     id: 11,
+      //     name: "Entertainment: Film",
+      //   },
+      //   {
+      //     id: 12,
+      //     name: "Entertainment: Music",
+      //   },
+      //   {
+      //     id: 13,
+      //     name: "Entertainment: Musicals & Theatres",
+      //   },
+      //   {
+      //     id: 14,
+      //     name: "Entertainment: Television",
+      //   },
+      //   {
+      //     id: 15,
+      //     name: "Entertainment: Video Games",
+      //   },
+      //   {
+      //     id: 16,
+      //     name: "Entertainment: Board Games",
+      //   },
+      //   {
+      //     id: 17,
+      //     name: "Science & Nature",
+      //   },
+      //   {
+      //     id: 18,
+      //     name: "Science: Computers",
+      //   },
+      //   {
+      //     id: 19,
+      //     name: "Science: Mathematics",
+      //   },
+      //   {
+      //     id: 20,
+      //     name: "Mythology",
+      //   },
+      //   {
+      //     id: 21,
+      //     name: "Sports",
+      //   },
+      //   {
+      //     id: 22,
+      //     name: "Geography",
+      //   },
+      //   {
+      //     id: 23,
+      //     name: "History",
+      //   },
+      //   {
+      //     id: 24,
+      //     name: "Politics",
+      //   },
+      //   {
+      //     id: 25,
+      //     name: "Art",
+      //   },
+      //   {
+      //     id: 26,
+      //     name: "Celebrities",
+      //   },
+      //   {
+      //     id: 27,
+      //     name: "Animals",
+      //   },
+      //   {
+      //     id: 28,
+      //     name: "Vehicles",
+      //   },
+      //   {
+      //     id: 29,
+      //     name: "Entertainment: Comics",
+      //   },
+      //   {
+      //     id: 30,
+      //     name: "Science: Gadgets",
+      //   },
+      //   {
+      //     id: 31,
+      //     name: "Entertainment: Japanese Anime & Manga",
+      //   },
+      //   {
+      //     id: 32,
+      //     name: "Entertainment: Cartoon & Animations",
+      //   },
+      // ],
     };
   },
+
 };
 </script>
 <style scoped>
