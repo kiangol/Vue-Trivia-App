@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    background: #364652;
+    font-family: 'Work Sans', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-weight: 700;
+}
