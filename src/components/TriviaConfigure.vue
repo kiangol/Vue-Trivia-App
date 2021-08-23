@@ -1,92 +1,104 @@
 <template>
   <main class="container">
-    <button @click="loadCats()">Load Categories</button>
-    <form @submit.prevent="onOptionsSubmit" class="m-3">
-      <h1>Trivia</h1>
-      <fieldset class="mb-3">
-        <label for="category" class="h4">Category:</label>
-        <select class="form-control" v-model="selectedCategory">
+    <form @submit="onConfigSubmit" class="mb-3">
+      <h2 class="p-5">Setup</h2>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <label for="categorySelect" class="input-group-text">Category:</label>
+        </div>
+        <select
+          id="categorySelect"
+          class="custom-select"
+          v-model="selectedCategory"
+        >
           <option
-            v-for="category of trivia_categories"
+            v-for="category of categories"
             :key="category.id"
             :value="category.id"
           >
             {{ category.name }}
           </option>
         </select>
-      </fieldset>
+      </div>
 
-      <fieldset class="mb-3">
-        <label for="difficulty" class="h4">Difficulty:</label>
-        <select class="form-control" v-model="selectedDifficulty">
-          <option v-for="difficulty of difficulties" :key="difficulty">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <label for="difficultySelect" class="input-group-text"
+            >Difficulty:</label
+          >
+        </div>
+        <select
+          id="difficultySelect"
+          class="custom-select"
+          v-model="selectedDifficulty"
+        >
+          <option
+            v-for="difficulty of ['Easy', 'Medium', 'Hard']"
+            :key="difficulty"
+            :value="difficulty.toLowerCase()"
+          >
             {{ difficulty }}
           </option>
         </select>
-      </fieldset>
+      </div>
 
-      <fieldset class="mb-3">
-        <label for="amount" class="h4">Number of questions:</label>
-        <select class="form-control" v-model="amount">
-          <option v-for="n in 11" :key="n" :value="n + 9">
-            {{ n + 9 }}
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <label for="amountSelect" class="input-group-text">Questions:</label>
+        </div>
+        <select
+          id="amountSelect"
+          class="custom-select"
+          v-model="selectedAmount"
+        >
+          <option v-for="n in 16" :key="n" :value="n + 4">
+            {{ n + 4 }}
           </option>
         </select>
-      </fieldset>
+      </div>
 
       <button type="submit" class="btn btn-primary btn-lg">Start Game</button>
     </form>
-    <section class="alert alert-danger" v-if="error">
-      <h4>Hang on!</h4>
-      <p class="mb-0">{{ error }}</p>
-    </section>
   </main>
 </template>
 
 <script>
 export default {
   name: "TriviaConfigure",
-  methods: {
-    loadCats() {
-      this.$store.dispatch(('fetchCategories'))
-      this.trivia_categories = this.$store.state.categories
-    },
-    onOptionsSubmit() {
-      if (!this.selectedCategory) {
-        this.error = "You forgot to select a category";
-        return;
-      }
-
-      if (!this.selectedDifficulty) {
-        this.error = "You forgot to select a difficulty";
-        return;
-      }
-      this.$store.dispatch('fetchQuestions', this.selectedCategory, this.amount, this.selectedDifficulty)
-      this.$router.push("/start");
-    },
-
-    computed: {
-      trivia_categories() {
-        return this.$store.state.categories
-      }
-    }
-  },
-
-  created() {
-    this.$store.dispatch('fetchCategories')
-  },
-
   data() {
     return {
-      error: "",
-      selectedCategory: '',
-      selectedDifficulty: "Easy",
-      amount: 10,
-      difficulties: ["Easy", "Medium", "Hard"],
-      trivia_categories: []
+      selectedCategory: 9,
+      selectedDifficulty: "easy",
+      selectedAmount: 10,
     };
   },
-
+  created() {
+    this.$store.dispatch("fetchCategories");
+  },
+  computed: {
+    categories() {
+      return this.$store.state.categories;
+    },
+  },
+  methods: {
+    onConfigSubmit() {
+      console.log(
+        "CAT:" +
+          this.selectedCategory +
+          " DIFF:" +
+          this.selectedDifficulty +
+          " AMT:" +
+          this.selectedAmount
+      );
+      let payload = {
+        category: this.selectedCategory,
+        amt: this.selectedAmount,
+        diff: this.selectedDifficulty,
+      };
+      this.$store.dispatch("fetchQuestions", payload);
+      this.$router.push("/game");
+    },
+  },
 };
 </script>
 <style scoped>

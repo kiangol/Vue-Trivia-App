@@ -1,30 +1,20 @@
 <template>
   <main>
-    <section class="container">
-      <form class="m-3">
-        <h4 v-html="questions[currentQuestion].question"></h4>
+    <section class="container p-5">
+      <section v-if="showQuestions">
+        <h4 class="pb-5">
+          Question {{ currentNum + 1 }} of {{ questions.length }}
+        </h4>
+        <h2 class="pb-5" v-html="questions[currentNum].question" />
         <ul class="options-list" style="width: 100%">
           <button
             @click="nextQuestion(option)"
             class="btn btn-light btn-lg"
-            v-for="option of questions[currentQuestion].incorrect_answers"
+            v-for="option of alternatives"
             :key="option"
-            :value="option"
             v-html="option"
           ></button>
-          <button
-            @click="
-              nextQuestion(this.questions[currentQuestion].correct_answer)
-            "
-            class="btn btn-light btn-lg"
-          >
-            {{ questions[currentQuestion].correct_answer }}
-          </button>
         </ul>
-      </form>
-      <section class="alert alert-danger" v-if="error">
-        <h4>Hang on!</h4>
-        <p class="mb-0">{{ error }}</p>
       </section>
       <section class="alert alert-success" v-if="message">
         <h4>Congratulations!</h4>
@@ -36,6 +26,14 @@
           See Results
         </button>
       </section>
+      <section class="container" v-if="showAnswers">
+        <section v-for="question in questions" :key="question.question">
+          <h5 v-html="question.question"></h5>
+          <button class="btn btn-success btn-sm">
+            {{ question.correct_answer }}
+          </button>
+        </section>
+      </section>
     </section>
   </main>
 </template>
@@ -43,42 +41,52 @@
 <script>
 export default {
   name: "TriviaGame",
-  methods: {
-    restart() {
-      this.$router.push("/config");
-    },
-    results() {
-      this.$router.push("/results");
-    },
-    nextQuestion(value) {
-      if (value === this.questions[this.currentQuestion].correct_answer) {
-        this.points += 10;
-      }
-      if (this.currentQuestion === this.questions.length - 1) {
-        this.message = `You got ${this.points}/${
-          this.questions.length * 10
-        } points!`;
-        return;
-      }
-      this.$router.dispatch('setAnswer', this.questions[this.currentQuestion].question, value)
-      this.currentQuestion++;
-    },
-  },
-  created() {
-    this.questions = this.$store.state.questions;
-  },
   data() {
     return {
-      message: "",
-      error: "",
       points: 0,
-      currentOptions: [],
-      currentQuestion: 0,
-      questions: [],
+      currentNum: 0,
+      answers: {},
+      message: "",
+      showAnswers: false,
+      showQuestions: true,
     };
+  },
+  computed: {
+    alternatives() {
+      let alts = [];
+      alts.push(...this.questions[this.currentNum].incorrect_answers);
+      alts.push(this.questions[this.currentNum].correct_answer);
+      return alts.sort(() => 0.5 - Math.random());
+    },
+    questions() {
+      return this.$store.state.questions;
+    },
+  },
+  methods: {
+    results() {
+      this.showAnswers = !this.showAnswers;
+    },
+    restart() {
+      this.$router.push("/");
+    },
+    nextQuestion(val) {
+      if (this.currentNum === this.questions.length - 1) {
+        this.showQuestions = false;
+        this.message = "You got " + this.points + " points!";
+        console.log("ANSWERS: " + this.answers);
+        return;
+      }
+      if (val === this.questions[this.currentNum].correct_answer)
+        this.points += 10;
+
+      this.answers[this.questions[this.currentNum]] = val;
+      console.log("ANSWER: " + val);
+      this.currentNum++;
+    },
   },
 };
 </script>
+
 <style scoped>
 .btn-group-vertical {
   display: grid;
