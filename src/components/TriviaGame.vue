@@ -25,6 +25,9 @@
         <button class="btn btn-secondary" v-if="message" @click="results()">
           See Results
         </button>
+        <button class="btn btn-primary" v-if="message" @click="replay()">
+          Replay
+        </button>
       </section>
       <section class="container" v-if="showAnswers">
         <section v-for="question in questions" :key="question.question">
@@ -68,6 +71,15 @@ export default {
     },
     restart() {
       this.$router.push("/");
+    },
+    replay() {
+      this.$store.dispatch("fetchQuestions", this.$store.state.payload);
+      this.points = 0
+      this.currentNum = 0
+      this.answers = {}
+      this.message = ""
+      this.showAnswers = false
+      this.showQuestions = true
     },
     nextQuestion(val) {
       if (this.currentNum === this.questions.length - 1) {

@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        payload: '',
         fetchingCategories: false,
         categories: [],
         questions: [],
@@ -34,6 +35,7 @@ export default new Vuex.Store({
             .then(data => commit('setCategories', data.trivia_categories))
         },
         async fetchQuestions({commit}, payload) {
+            this.state.payload = payload
             let url = `https://opentdb.com/api.php?amount=${payload.amt}&category=${payload.category}&difficulty=${payload.diff}`
             console.log(url)
             await fetch(url)
