@@ -1,6 +1,6 @@
 <template>
   <main>
-    <section class="container">
+    <section class="container" v-if="questions.length">
       <form class="m-3">
         <h1>{{ questions[currentQuestion].category }}</h1>
         <h4 v-html="questions[currentQuestion].question"></h4>
@@ -12,11 +12,11 @@
             :key="option"
             :value="option"
             v-html="option"
-          >
-            <!-- {{ option }} -->
-          </button>
+          ></button>
           <button
-            @click="nextQuestion(questions[currentQuestion].correct_answer)"
+            @click="
+              nextQuestion(this.questions[currentQuestion].correct_answer)
+            "
             class="btn btn-light btn-lg"
           >
             {{ questions[currentQuestion].correct_answer }}
@@ -30,8 +30,12 @@
       <section class="alert alert-success" v-if="message">
         <h4>Congratulations!</h4>
         <p class="mb-0">{{ message }}</p>
-      <button class="btn btn-success" v-if="message" @click="restart()">New Game</button>
-      <button class="btn btn-secondary" v-if="message" @click="results()">See Results</button>
+        <button class="btn btn-success" v-if="message" @click="restart()">
+          New Game
+        </button>
+        <button class="btn btn-secondary" v-if="message" @click="results()">
+          See Results
+        </button>
       </section>
     </section>
   </main>
@@ -42,26 +46,26 @@ export default {
   name: "TriviaConfigure",
   methods: {
     restart() {
-      this.$router.push("/");
+      this.$router.push("/config");
     },
     results() {
-      this.$router.push("/results")
+      this.$router.push("/results");
     },
     nextQuestion(value) {
       if (value === this.questions[this.currentQuestion].correct_answer) {
         this.points += 10;
       }
       if (this.currentQuestion === this.questions.length - 1) {
-        this.message = `You got ${this.points}/${this.questions.length * 10} points!`
-        // alert("You got " + this.points + " points!");
+        this.message = `You got ${this.points}/${
+          this.questions.length * 10
+        } points!`;
         return;
       }
       this.currentQuestion++;
     },
   },
-  mounted() {
-    
-    this.questions = this.$store.state.questions
+  created() {
+    this.questions = this.$store.state.questions;
   },
   data() {
     return {

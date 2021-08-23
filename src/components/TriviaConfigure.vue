@@ -51,7 +51,7 @@ export default {
     loadCats() {
       this.$store.dispatch(('fetchCategories'))
       this.trivia_categories = this.$store.state.categories
-      this.$store.dispatch('fetchQuestions', this.selectedCategory, this.amount, this.selectedDifficulty)
+      this.$store.dispatch('fetchQuestions', this.selectedCategory, this.amount.toString(), this.selectedDifficulty.toString())
     },
     onOptionsSubmit() {
       if (!this.selectedCategory) {
