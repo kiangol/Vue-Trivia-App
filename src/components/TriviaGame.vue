@@ -1,8 +1,7 @@
 <template>
   <main>
-    <section class="container" v-if="questions.length">
+    <section class="container">
       <form class="m-3">
-        <h1>{{ questions[currentQuestion].category }}</h1>
         <h4 v-html="questions[currentQuestion].question"></h4>
         <ul class="options-list" style="width: 100%">
           <button
@@ -43,7 +42,7 @@
 
 <script>
 export default {
-  name: "TriviaConfigure",
+  name: "TriviaGame",
   methods: {
     restart() {
       this.$router.push("/config");
@@ -61,6 +60,7 @@ export default {
         } points!`;
         return;
       }
+      this.$router.dispatch('setAnswer', this.questions[this.currentQuestion].question, value)
       this.currentQuestion++;
     },
   },

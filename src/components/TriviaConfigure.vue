@@ -2,7 +2,7 @@
   <main class="container">
     <button @click="loadCats()">Load Categories</button>
     <form @submit.prevent="onOptionsSubmit" class="m-3">
-    <h1>Trivia</h1>
+      <h1>Trivia</h1>
       <fieldset class="mb-3">
         <label for="category" class="h4">Category:</label>
         <select class="form-control" v-model="selectedCategory">
@@ -25,11 +25,10 @@
         </select>
       </fieldset>
 
-
       <fieldset class="mb-3">
         <label for="amount" class="h4">Number of questions:</label>
         <select class="form-control" v-model="amount">
-          <option v-for="n in 11" :key="n">
+          <option v-for="n in 11" :key="n" :value="n + 9">
             {{ n + 9 }}
           </option>
         </select>
@@ -51,7 +50,6 @@ export default {
     loadCats() {
       this.$store.dispatch(('fetchCategories'))
       this.trivia_categories = this.$store.state.categories
-      this.$store.dispatch('fetchQuestions', this.selectedCategory, this.amount.toString(), this.selectedDifficulty.toString())
     },
     onOptionsSubmit() {
       if (!this.selectedCategory) {
@@ -66,128 +64,34 @@ export default {
       this.$store.dispatch('fetchQuestions', this.selectedCategory, this.amount, this.selectedDifficulty)
       this.$router.push("/start");
     },
+
+    computed: {
+      trivia_categories() {
+        return this.$store.state.categories
+      }
+    }
   },
 
-  mounted() {
-    this.trivia_categories = this.$store.state.categories
-    console.log(this.trivia_categories)
+  created() {
+    this.$store.dispatch('fetchCategories')
   },
 
   data() {
     return {
       error: "",
-      selectedCategory: 9,
+      selectedCategory: '',
       selectedDifficulty: "Easy",
       amount: 10,
       difficulties: ["Easy", "Medium", "Hard"],
-      trivia_categories: [],
-      // trivia_categories: [
-      //   {
-      //     id: 9,
-      //     name: "General Knowledge",
-      //   },
-      //   {
-      //     id: 10,
-      //     name: "Entertainment: Books",
-      //   },
-      //   {
-      //     id: 11,
-      //     name: "Entertainment: Film",
-      //   },
-      //   {
-      //     id: 12,
-      //     name: "Entertainment: Music",
-      //   },
-      //   {
-      //     id: 13,
-      //     name: "Entertainment: Musicals & Theatres",
-      //   },
-      //   {
-      //     id: 14,
-      //     name: "Entertainment: Television",
-      //   },
-      //   {
-      //     id: 15,
-      //     name: "Entertainment: Video Games",
-      //   },
-      //   {
-      //     id: 16,
-      //     name: "Entertainment: Board Games",
-      //   },
-      //   {
-      //     id: 17,
-      //     name: "Science & Nature",
-      //   },
-      //   {
-      //     id: 18,
-      //     name: "Science: Computers",
-      //   },
-      //   {
-      //     id: 19,
-      //     name: "Science: Mathematics",
-      //   },
-      //   {
-      //     id: 20,
-      //     name: "Mythology",
-      //   },
-      //   {
-      //     id: 21,
-      //     name: "Sports",
-      //   },
-      //   {
-      //     id: 22,
-      //     name: "Geography",
-      //   },
-      //   {
-      //     id: 23,
-      //     name: "History",
-      //   },
-      //   {
-      //     id: 24,
-      //     name: "Politics",
-      //   },
-      //   {
-      //     id: 25,
-      //     name: "Art",
-      //   },
-      //   {
-      //     id: 26,
-      //     name: "Celebrities",
-      //   },
-      //   {
-      //     id: 27,
-      //     name: "Animals",
-      //   },
-      //   {
-      //     id: 28,
-      //     name: "Vehicles",
-      //   },
-      //   {
-      //     id: 29,
-      //     name: "Entertainment: Comics",
-      //   },
-      //   {
-      //     id: 30,
-      //     name: "Science: Gadgets",
-      //   },
-      //   {
-      //     id: 31,
-      //     name: "Entertainment: Japanese Anime & Manga",
-      //   },
-      //   {
-      //     id: 32,
-      //     name: "Entertainment: Cartoon & Animations",
-      //   },
-      // ],
+      trivia_categories: []
     };
   },
 
 };
 </script>
 <style scoped>
-
 .container {
-  background: #C7DBE6;
+  background: #c7dbe6;
   max-width: 95%;
   --tw-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),

@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 const state = {
     questions: [],
-    answers: [],
+    answers: {},
     categories: [],
     points: 0,
     currentQuestion: 0,
@@ -20,15 +20,19 @@ const mutations = {
     async setQuestions(state, questions) {
         state.questions = questions
         console.log("QUESTIONS: ", questions)
+    },
+    SET_ANSWER(state, question, answer) {
+        state.answers[question] = answer
     }
 }
 
 const actions = {
-    async fetchQuestions({ commit }, cat) {
-        console.log("CAT CAT: " + cat)
-        console.log("URL ????? !!!")
+    setAnswer({ commit }, question, answer) {
+        commit('SET_ANSWER', question, answer)
+    },
+    async fetchQuestions({ commit }, cat, amt) {
         let url = `https://opentdb.com/api.php?amount=10&category=${cat}&difficulty=easy&type=multiple`
-        console.log("URL: " + url)
+        console.log("URL: " + url + " AMT: " + amt)
         fetch(url)
         .then(response => response.json())
         .then(data => commit('setQuestions', data.results))
@@ -45,8 +49,8 @@ const actions = {
 }
 
 const getters = {
-    getCategories() {
-        return this.state.categories
+    getCategories: state => {
+        return state.categories
     }
 }
 
