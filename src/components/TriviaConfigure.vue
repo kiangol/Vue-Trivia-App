@@ -103,7 +103,11 @@ export default {
 </script>
 <style scoped>
 .container {
-  background: #c7dbe6;
+  /* background: #c7dbe6; */
+  background: no-repeat url(//s.ytimg.com/yt/imgbin/www-refreshbg-vflC3wnbM.png)
+    0 0;
+  /* background-color: #ebebeb; */
+  background-repeat: repeat;
   max-width: 95%;
   --tw-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),

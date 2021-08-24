@@ -30,14 +30,14 @@
         </button>
       </section>
 
-      <section class="container" v-if="showAnswers">
+      <section v-if="showAnswers">
         <ul v-for="item of resultingAnswers" :key="item.answer">
           <h5 v-html="item.question.question"></h5>
-          <p>Correct answer: {{item.question.correct_answer}}</p>
-          <p>Your answer: {{item.answer}}</p>
-          <!-- <button class="btn btn-success btn-sm">
-            {{ question.correct_answer }}
-          </button> -->
+          <!-- <p>Correct answer: {{item.question.correct_answer}}</p> -->
+          <button class="btn btn-success disabled btn-sm" v-html="item.question.correct_answer">
+          </button>
+          <p>Your answer: </p> <button class="btn btn-secondary disabled btn-sm" v-html="item.answer">
+          </button>
         </ul>
       </section>
     </section>
@@ -128,7 +128,11 @@ export default {
 }
 
 .container {
-  background: #c7dbe6;
+  /* background: #c7dbe6; */
+  background: repeat url(//s.ytimg.com/yt/imgbin/www-refreshbg-vflC3wnbM.png)
+    0 0;
+  /* background-color: #ebebeb; */
+  /* background-repeat: repeat; */
   max-width: 95%;
   --tw-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
