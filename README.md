@@ -1,5 +1,7 @@
 # trivia-app
 
+Live demo on <https://kian-trivia.herokuapp.com/>
+
 ## Project setup
 ```
 npm install
