@@ -29,13 +29,16 @@
           Replay
         </button>
       </section>
+
       <section class="container" v-if="showAnswers">
-        <section v-for="question in questions" :key="question.question">
-          <h5 v-html="question.question"></h5>
-          <button class="btn btn-success btn-sm">
+        <ul v-for="item of resultingAnswers" :key="item.answer">
+          <h5 v-html="item.question.question"></h5>
+          <p>Correct answer: {{item.question.correct_answer}}</p>
+          <p>Your answer: {{item.answer}}</p>
+          <!-- <button class="btn btn-success btn-sm">
             {{ question.correct_answer }}
-          </button>
-        </section>
+          </button> -->
+        </ul>
       </section>
     </section>
   </main>
@@ -48,7 +51,7 @@ export default {
     return {
       points: 0,
       currentNum: 0,
-      answers: {},
+      answers: [],
       message: "",
       rating: "",
       showAnswers: false,
@@ -65,6 +68,11 @@ export default {
     questions() {
       return this.$store.state.questions;
     },
+    resultingAnswers() {
+      return this.answers.map((element, i) => {
+        return {answer: element, question: this.questions[i]}
+      })
+    }
   },
   methods: {
     results() {
@@ -77,7 +85,7 @@ export default {
       this.$store.dispatch("fetchQuestions", this.$store.state.payload);
       this.points = 0
       this.currentNum = 0
-      this.answers = {}
+      this.answers = []
       this.message = ""
       this.showAnswers = false
       this.showQuestions = true
@@ -92,7 +100,7 @@ export default {
       if (val === this.questions[this.currentNum].correct_answer)
         this.points += 10;
 
-      this.answers[this.questions[this.currentNum]] = val;
+      this.answers.push(val)
       console.log("ANSWER: " + val);
       this.currentNum++;
     },
