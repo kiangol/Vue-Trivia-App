@@ -2,10 +2,10 @@
   <main>
     <section class="container p-5">
       <section v-if="showQuestions">
-        <h4 class="pb-5">
+        <h5>
           Question {{ currentNum + 1 }} of {{ questions.length }}
-        </h4>
-        <h2 class="pb-5" v-html="questions[currentNum].question" />
+        </h5>
+        <h4 class="pb-2" v-html="questions[currentNum].question" />
         <ul class="options-list" style="width: 100%">
           <button
             @click="nextQuestion(option)"
@@ -17,7 +17,7 @@
         </ul>
       </section>
       <section class="alert alert-success" v-if="message">
-        <h4>Congratulations!</h4>
+        <h4>{{rating}}</h4>
         <p class="mb-0">{{ message }}</p>
         <button class="btn btn-success" v-if="message" @click="restart()">
           New Game
@@ -50,6 +50,7 @@ export default {
       currentNum: 0,
       answers: {},
       message: "",
+      rating: "",
       showAnswers: false,
       showQuestions: true,
     };
